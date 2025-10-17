@@ -8,11 +8,11 @@ public class PlayerController : MonoBehaviour
     [SerializeField]private float speed = 10f;
     [SerializeField] private float acceleration = 1f;
     public bool isGameStarted = false;
-    Vector3 moveDirection = Vector3.zero;
+    private float speedT = 0;
     Rigidbody rb;
     Vector2 direction;
 
-    private float currentSpeed;
+    [SerializeField]private float currentSpeed;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -29,11 +29,13 @@ public class PlayerController : MonoBehaviour
         Vector3 rotationVector = rb.rotation.eulerAngles;
         rotationVector.y += direction.x * rotationRate * Time.deltaTime;
         rb.MoveRotation(Quaternion.Euler(rotationVector));
+        speedT += MathF.Min(acceleration * Time.deltaTime, speed);
+        currentSpeed = Mathf.Lerp(0, speed, speedT);
         if (currentSpeed < speed)
             currentSpeed += Time.deltaTime * acceleration;
         else if (currentSpeed > speed)
             currentSpeed = speed;
-        Vector3 velocity = transform.right * currentSpeed;
+        Vector3 velocity = transform.rotation.eulerAngles.normalized * currentSpeed;
         velocity.y = rb.linearVelocity.y;
         rb.linearVelocity = velocity;
     }
