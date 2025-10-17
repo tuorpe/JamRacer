@@ -33,7 +33,9 @@ public class PlayerController : MonoBehaviour
             currentSpeed += Time.deltaTime * acceleration;
         else if (currentSpeed > speed)
             currentSpeed = speed;
-        rb.linearVelocity = transform.right * currentSpeed;
+        Vector3 velocity = rb.linearVelocity;
+        velocity.x = currentSpeed;
+        rb.linearVelocity = velocity;
     }
 
     public void OnMove(InputValue value)
